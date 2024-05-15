@@ -1,5 +1,7 @@
 import { sendOtp } from "services/auth";
 
+import styles from "./SendOtpForm.module.css";
+
 function SendOtpForm({ setStep, mobile, setMobile }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -12,9 +14,9 @@ function SendOtpForm({ setStep, mobile, setMobile }) {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit} className={styles.form}>
       <div>
-        <p>ورود به حساب کاربری</p>
+        <h3>ورود به حساب کاربری</h3>
       </div>
       <label htmlFor="input">شمارهٔ موبایل خود را وارد کنید</label>
       <p>
@@ -28,10 +30,10 @@ function SendOtpForm({ setStep, mobile, setMobile }) {
         value={mobile}
         onChange={(e) => setMobile(e.target.value)}
       />
-      <p>
+      <span>
         <a href="#">شرایط استفاده از خدمات</a> و <a href="#">حریم خصوصی</a>{" "}
         دیوار را می‌پذیرم.
-      </p>
+      </span>
       <button type="submit">تایید</button>
     </form>
   );
