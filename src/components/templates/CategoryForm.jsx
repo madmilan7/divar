@@ -11,7 +11,6 @@ function CategoryForm() {
   const { mutate, data, isPending, error } = useMutation({
     mutationFn: addCategory,
   });
-  console.log({ data, isPending, error });
 
   const handleChange = (event) => {
     setForm({ ...form, [event.target.name]: event.target.value });
