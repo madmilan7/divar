@@ -21,3 +21,11 @@
   text-align: left;
   color: #a62626;
 }
+
+.list button {
+  background-color: #a62626;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+}
