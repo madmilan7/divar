@@ -1,6 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
+import axios from "axios";
 import { getCategory } from "services/admin";
+import { getCookie } from "utils/cookie";
 
 import styles from "./AddPost.module.css";
 
@@ -11,7 +13,7 @@ function AddPost() {
     amount: null,
     city: "",
     category: "",
-    image: null,
+    images: null,
   });
 
   const { data } = useQuery({
@@ -22,7 +24,7 @@ function AddPost() {
   const handleChange = (event) => {
     const name = event.target.name;
 
-    if (name === "image") {
+    if (name === "images") {
       setForm({ ...form, [name]: event.target.files[0] });
     } else {
       setForm({ ...form, [name]: event.target.value });
@@ -32,7 +34,21 @@ function AddPost() {
   const handleAdd = (event) => {
     event.preventDefault();
 
-    console.log(form);
+    const formData = new FormData();
+    for (let i in form) {
+      formData.append(i, form[i]);
+    }
+
+    const token = getCookie("accessToken");
+    axios
+      .post(`${import.meta.env.VITE_BASE_URL}post/create`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `bearer ${token}`,
+        },
+      })
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
   };
 
   return (
@@ -46,7 +62,7 @@ function AddPost() {
       <textarea name="content" id="content" />
       {/* amount */}
       <label htmlFor="amount">قیمت</label>
-      <input type="text" name="amount" id="amount" />
+      <input type="number" name="amount" id="amount" />
       {/* city */}
       <label htmlFor="city">شهر</label>
       <input type="text" name="city" id="city" />
@@ -60,8 +76,8 @@ function AddPost() {
         ))}
       </select>
       {/* image */}
-      <label htmlFor="image">عکس</label>
-      <input type="file" name="image" id="image" />
+      <label htmlFor="images">عکس</label>
+      <input type="file" name="images" id="images" />
       <button onClick={handleAdd}>ایجاد</button>
     </form>
   );
