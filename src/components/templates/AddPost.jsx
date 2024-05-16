@@ -1,0 +1,70 @@
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { getCategory } from "services/admin";
+
+import styles from "./AddPost.module.css";
+
+function AddPost() {
+  const [form, setForm] = useState({
+    title: "",
+    content: "",
+    amount: null,
+    city: "",
+    category: "",
+    image: null,
+  });
+
+  const { data } = useQuery({
+    queryKey: ["categories"],
+    queryFn: getCategory,
+  });
+
+  const handleChange = (event) => {
+    const name = event.target.name;
+
+    if (name === "image") {
+      setForm({ ...form, [name]: event.target.files[0] });
+    } else {
+      setForm({ ...form, [name]: event.target.value });
+    }
+  };
+
+  const handleAdd = (event) => {
+    event.preventDefault();
+
+    console.log(form);
+  };
+
+  return (
+    <form onChange={handleChange} className={styles.form}>
+      <h3>افزودن آگهی</h3>
+      {/* title */}
+      <label htmlFor="title">عنوان</label>
+      <input type="text" name="title" id="title" />
+      {/* content */}
+      <label htmlFor="content">توضیحات</label>
+      <textarea name="content" id="content" />
+      {/* amount */}
+      <label htmlFor="amount">قیمت</label>
+      <input type="text" name="amount" id="amount" />
+      {/* city */}
+      <label htmlFor="city">شهر</label>
+      <input type="text" name="city" id="city" />
+      {/* category */}
+      <label htmlFor="category">دسته بندی</label>
+      <select name="category" id="category">
+        {data?.data.map((item) => (
+          <option key={item._id} value={item._id}>
+            {item.name}
+          </option>
+        ))}
+      </select>
+      {/* image */}
+      <label htmlFor="image">عکس</label>
+      <input type="file" name="image" id="image" />
+      <button onClick={handleAdd}>ایجاد</button>
+    </form>
+  );
+}
+
+export default AddPost;
