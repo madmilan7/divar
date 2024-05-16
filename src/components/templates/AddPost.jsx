@@ -5,6 +5,7 @@ import { getCategory } from "services/admin";
 import { getCookie } from "utils/cookie";
 
 import styles from "./AddPost.module.css";
+import toast from "react-hot-toast";
 
 function AddPost() {
   const [form, setForm] = useState({
@@ -47,8 +48,8 @@ function AddPost() {
           Authorization: `bearer ${token}`,
         },
       })
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+      .then((res) => toast.success(res.data.message))
+      .catch(() => toast.error("مشکلی وجود دارد"));
   };
 
   return (
