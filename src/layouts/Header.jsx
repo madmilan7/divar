@@ -42,6 +42,11 @@ function Header() {
     refetch();
   };
 
+  const handleClick = () => {
+    logout();
+    handleToggleDropdown();
+  };
+
   return (
     <header className={styles.header}>
       <div>
@@ -63,7 +68,7 @@ function Header() {
             <Link to="/auth">
               <p onClick={handleToggleDropdown}>ورود</p>
             </Link>
-            <p onClick={(logout, handleToggleDropdown)}>خروج</p>
+            <p onClick={handleClick}>خروج</p>
           </div>
         )}
         <Link to="/dashboard" className={styles.button}>
