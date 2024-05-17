@@ -1,8 +1,47 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { deleteCookie } from "utils/cookie";
+import { getProfile } from "services/user";
 
 import styles from "./Header.module.css";
+import { useEffect, useRef, useState } from "react";
 
 function Header() {
+  const navigate = useNavigate();
+
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  const { refetch } = useQuery({
+    queryKey: ["profile"],
+    queryFn: getProfile,
+  });
+
+  const handleToggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const logout = () => {
+    deleteCookie("accessToken");
+    deleteCookie("refreshToken");
+
+    navigate("/");
+    refetch();
+  };
+
   return (
     <header className={styles.header}>
       <div>
@@ -15,12 +54,18 @@ function Header() {
         </span>
       </div>
       <div>
-        <Link to="/auth">
-          <span>
-            <img src="profile.svg" />
-            <p>دیوار من</p>
-          </span>
-        </Link>
+        <span onClick={handleToggleDropdown}>
+          <img src="profile.svg" />
+          <p>دیوار من</p>
+        </span>
+        {isDropdownOpen && (
+          <div className={styles.dropdown} ref={dropdownRef}>
+            <Link to="/auth">
+              <p onClick={handleToggleDropdown}>ورود</p>
+            </Link>
+            <p onClick={(logout, handleToggleDropdown)}>خروج</p>
+          </div>
+        )}
         <Link to="/dashboard" className={styles.button}>
           ثبت آگهی
         </Link>

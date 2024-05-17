@@ -19,7 +19,6 @@ function CheckOtpForm({ code, setCode, mobile, setStep }) {
     if (code.length !== 5) return;
 
     const { response, error } = await checkOtp(mobile, code);
-    console.log({ response, error });
 
     if (response) {
       setCookie(response.data);
@@ -44,7 +43,9 @@ function CheckOtpForm({ code, setCode, mobile, setStep }) {
         value={code}
         onChange={(e) => setCode(e.target.value)}
       />
-      <button onClick={() => setStep(1)} className={styles.backButton}>تغییر شماره موبایل</button>
+      <button onClick={() => setStep(1)} className={styles.backButton}>
+        تغییر شماره موبایل
+      </button>
       <button type="submit">ورود</button>
     </form>
   );
