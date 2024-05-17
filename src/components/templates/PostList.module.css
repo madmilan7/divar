@@ -34,6 +34,14 @@
   color: gray;
 }
 
+.post button {
+  background-color: #a62626;
+  color: #fff;
+  padding: 5px 15px;
+  border: none;
+  border-radius: 5px;
+}
+
 .post .price {
   width: 150px;
   text-align: center;

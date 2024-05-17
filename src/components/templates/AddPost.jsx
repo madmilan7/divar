@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import axios from "axios";
 import { getCategory } from "services/admin";
@@ -16,6 +16,8 @@ function AddPost() {
     category: "",
     images: null,
   });
+
+  const queryClient = useQueryClient();
 
   const { data } = useQuery({
     queryKey: ["categories"],
@@ -50,6 +52,7 @@ function AddPost() {
       })
       .then((res) => toast.success(res.data.message))
       .catch(() => toast.error("مشکلی وجود دارد"));
+    queryClient.invalidateQueries(["myPostList"]);
   };
 
   return (
