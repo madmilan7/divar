@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "react-router-dom";
 
 import Main from "components/templates/Main";
 import Sidebar from "components/templates/Sidebar";
@@ -9,9 +10,12 @@ import { getCategory } from "services/admin";
 const style = { display: "flex" };
 
 function HomePage() {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const category = searchParams.get("category");
+
   const { data: posts, isPending: postsLoading } = useQuery({
-    queryKey: ["postLists"],
-    queryFn: getAllPosts,
+    queryKey: ["postLists", category],
+    queryFn: () => getAllPosts(category),
   });
 
   const { data: categories, isPending: categoriesLoading } = useQuery({
@@ -19,13 +23,24 @@ function HomePage() {
     queryFn: getCategory,
   });
 
+  const handleCategoryClick = (category) => {
+    if (category === "all") {
+      setSearchParams({});
+    } else {
+      setSearchParams({ category });
+    }
+  };
+
   return (
     <>
       {postsLoading || categoriesLoading ? (
         <Loader />
       ) : (
         <div style={style}>
-          <Sidebar categories={categories} />
+          <Sidebar
+            categories={categories}
+            onCategoryClick={handleCategoryClick}
+          />
           <Main posts={posts} />
         </div>
       )}
